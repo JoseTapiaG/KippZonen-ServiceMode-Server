@@ -9,9 +9,9 @@
     <script>
     $(function() {
         $('#pagination').twbsPagination({
-            totalPages: {{totalPages}},
+            totalPages: {{total_pages}},
             visiblePages: 7,
-            href: '?page={{"{{number}}"}}&dateIni={{dateIni}}&dateEnd={{dateEnd}}'
+            href: '?page={{"{{number}}"}}&dateIni={{date_ini}}&dateEnd={{date_end}}'
         });
     });
     </script>
@@ -20,8 +20,8 @@
 
 
 <form action="csv">
-    <input name="dateIni" type="hidden" value="{{dateIni}}">
-    <input name="dateEnd" type="hidden" value="{{dateEnd}}">
+    <input name="dateIni" type="hidden" value="{{date_ini}}">
+    <input name="dateEnd" type="hidden" value="{{date_end}}">
     <input type="submit" value="Exportar CSV">
 </form>
 <table>
