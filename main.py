@@ -4,7 +4,7 @@ from flask import Flask, request, render_template, make_response
 
 import database
 import math
-from models import db_session, Registro
+from models import db, Registro
 
 app = Flask(__name__)
 app.debug = True
@@ -12,11 +12,10 @@ app.debug = True
 
 @app.route("/createAll")
 def create_all():
-    db_session = database.get_db()
-    db_session.create_all()
+    db.create_all()
     registro = Registro(datetime.now(), 0.051, 0.072, 0.093)
-    db_session.session.add(registro)
-    db_session.session.commit()
+    db.session.add(registro)
+    db.session.commit()
     return "ok"
 
 
@@ -66,11 +65,10 @@ def save():
                 dato2=request.form['dato2'],
                 dato3=request.form['dato3']
         )
-        db_session = database.get_db()
-        db_session.session.add(registro)
-        db_session.session.commit()
-    except 'Exception':
-        db_session.session.rollback()
+        db.session.add(registro)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
     return "Ok"
 
 
