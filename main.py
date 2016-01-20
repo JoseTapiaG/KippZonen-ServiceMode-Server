@@ -1,21 +1,79 @@
+import math
 from datetime import datetime
 
+import flask
 from flask import Flask, request, render_template, make_response
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
-import database
-import math
-from models import db, Registro
+from forms import LoginForm, validate_user, CreateUserForm
+from models import db, Registro, User
 
 app = Flask(__name__)
-app.debug = True
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(email):
+    return User.query.get(email)
+
+
+@app.route('/create_user', methods=['GET', 'POST'])
+def create_user():
+    form = CreateUserForm(request.form)
+    if request.method == "POST":
+        if form.validate():
+            if not form.user_exist():
+                user = User(email=form.email.data, user=form.user.data, password=form.password.data)
+                db.session.add(user)
+                db.session.commit()
+                return flask.redirect("login.html")
+    return render_template("create_user.html", form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm(request.form)
+    if form.validate():
+        user = validate_user(form.user._value(), form.password._value())
+        if user:
+            user.authenticated = True
+            db.session.add(user)
+            db.session.commit()
+            login_user(user, remember=True)
+            return flask.redirect("filter")
+    return render_template("login.html", form=form)
+
+
+@app.route("/logout", methods=["GET"])
+@login_required
+def logout():
+    """Logout the current user."""
+    user = current_user
+    user.authenticated = False
+    db.session.add(user)
+    db.session.commit()
+    logout_user()
+    return render_template("logout.html")
+
+
+@app.route("/index")
+@login_required
+def index():
+    return render_template('index.html', login_form=LoginForm())
 
 
 @app.route("/createAll")
 def create_all():
-    db.create_all()
-    registro = Registro(datetime.now(), 0.051, 0.072, 0.093)
-    db.session.add(registro)
-    db.session.commit()
+    try:
+        db.create_all()
+        registro = Registro(datetime.now(), 0.051, 0.072, 0.093)
+        user = User("jose.wt@gmail.com", "jose", "pass")
+        db.session.add(registro)
+        db.session.add(user)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
     return "ok"
 
 
@@ -26,6 +84,7 @@ def get_all():
 
 
 @app.route("/filter")
+@login_required
 def filter_registers():
     return render_template('filter.html')
 
@@ -73,4 +132,5 @@ def save():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.config["SECRET_KEY"] = "ITSASECRET"
+    app.run(port=5000, debug=True)
