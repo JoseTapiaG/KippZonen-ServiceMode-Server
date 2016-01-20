@@ -7,9 +7,9 @@
 <body>
 <form action="login" method="post">
     Usuario:
-    {{form.user}}
+    {{form.user(required="")}}
     Password:
-    {{form.password}}
+    {{form.password(required="")}}
     <input type="submit">
 </form>
 </body>

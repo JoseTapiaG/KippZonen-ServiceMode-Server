@@ -27,4 +27,4 @@ class CreateUserForm(Form):
     password = StringField(u'password', validators=[validators.input_required(messages.required)])
 
     def user_exist(self):
-        return User.query.get(self.email) is None
+        return User.query.get(self.email.data) is not None

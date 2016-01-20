@@ -7,13 +7,16 @@
 <body>
 <form method="post">
     <div>
+        {{error}}
+    </div>
+    <div>
         {% for error in form.user.errors%}
         {{error}}
         {% endfor %}
     </div>
     <div>
         Usuario:
-        {{form.user}}
+        {{form.user(required="")}}
     </div>
     <div>
         {% for error in form.email.errors%}
@@ -22,7 +25,7 @@
     </div>
     <div>
         E-mail
-        {{form.email}}
+        {{form.email(required="")}}
     </div>
     <div>
         {% for error in form.password.errors%}
@@ -31,7 +34,7 @@
     </div>
     <div>
         Password
-        {{form.password}}
+        {{form.password(required="")}}
     </div>
     <input type="submit" value="Enviar">
 </form>

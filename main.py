@@ -24,10 +24,16 @@ def create_user():
     if request.method == "POST":
         if form.validate():
             if not form.user_exist():
-                user = User(email=form.email.data, user=form.user.data, password=form.password.data)
-                db.session.add(user)
-                db.session.commit()
-                return flask.redirect("login.html")
+                try:
+                    user = User(email=form.email.data, user=form.user.data, password=form.password.data)
+                    db.session.add(user)
+                    db.session.commit()
+                    return flask.redirect("login")
+                except Exception:
+                    db.session.rollback()
+            else:
+                error = "Usuario ya existe"
+                return render_template("create_user.html", form=form, error=error)
     return render_template("create_user.html", form=form)
 
 
