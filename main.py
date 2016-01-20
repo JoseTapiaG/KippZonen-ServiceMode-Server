@@ -6,12 +6,13 @@ from flask import Flask, request, render_template, make_response
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
 from forms import LoginForm, validate_user, CreateUserForm
-from models import db, Registro, User
-
+from models import db, Registro, User, Perfil
+from enums import Periodicidad
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
 
 @login_manager.user_loader
 def load_user(email):
@@ -70,16 +71,23 @@ def index():
     return render_template('index.html', login_form=LoginForm())
 
 
+@app.route("/getPerfil")
+def getPerfil():
+    perfil = Perfil.query.get(1)
+    return perfil
+
+
 @app.route("/createAll")
 def create_all():
     try:
         db.create_all()
         registro = Registro(datetime.now(), 0.051, 0.072, 0.093)
         user = User("jose.wt@gmail.com", "jose", "pass")
+        user.perfil = Perfil()
         db.session.add(registro)
         db.session.add(user)
         db.session.commit()
-    except Exception:
+    except Exception as e:
         db.session.rollback()
     return "ok"
 
