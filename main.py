@@ -11,7 +11,7 @@ from models import db, Registro, User
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-
+login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(email):
@@ -39,6 +39,7 @@ def create_user():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    next = flask.request.args.get('next')
     form = LoginForm(request.form)
     if form.validate():
         user = validate_user(form.user._value(), form.password._value())
@@ -47,8 +48,8 @@ def login():
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)
-            return flask.redirect("filter")
-    return render_template("login.html", form=form)
+            return flask.redirect(next or "filter")
+    return render_template("login.html", form=form, next=next)
 
 
 @app.route("/logout", methods=["GET"])

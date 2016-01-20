@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<form action="login" method="post">
+<form action="{{url_for('login', next=next)}}" method="post">
     Usuario:
     {{form.user(required="")}}
     Password:
