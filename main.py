@@ -101,8 +101,8 @@ def get_registers_for_date():
 
 @app.route("/csv")
 def export_csv():
-    date_ini = datetime.strptime(request.args.get("date_ini"), "%Y-%m-%d")
-    date_end = datetime.strptime(request.args.get("date_end"), "%Y-%m-%d")
+    date_ini = datetime.strptime(request.args.get("dateIni"), "%Y-%m-%d")
+    date_end = datetime.strptime(request.args.get("dateEnd"), "%Y-%m-%d")
     registros = Registro.query.filter(Registro.fecha.between(date_ini, date_end))
     csv_str = ""
     for registro in registros:
