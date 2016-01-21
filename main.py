@@ -7,7 +7,9 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 
 from forms import LoginForm, validate_user, CreateUserForm
 from models import db, Registro, User, Perfil
-from enums import Periodicidad
+
+from automatizacion import SchedulerManager
+
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -77,21 +79,6 @@ def getPerfil():
     return perfil
 
 
-@app.route("/createAll")
-def create_all():
-    try:
-        db.create_all()
-        registro = Registro(datetime.now(), 0.051, 0.072, 0.093)
-        user = User("jose.wt@gmail.com", "jose", "pass")
-        user.perfil = Perfil()
-        db.session.add(registro)
-        db.session.add(user)
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-    return "ok"
-
-
 @app.route("/getAll")
 def get_all():
     registros = Registro.query.all()
@@ -144,6 +131,36 @@ def save():
     except Exception:
         db.session.rollback()
     return "Ok"
+
+
+def create_db():
+    try:
+        db.create_all()
+    except Exception as e:
+        db.session.rollback()
+    return "ok"
+
+
+def populate_db():
+    try:
+        registro = Registro(datetime.now(), 0.051, 0.072, 0.093)
+        user = User("jose.wt@gmail.com", "jose", "pass")
+        user.perfil = Perfil()
+        db.session.add(registro)
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+    return "Ok"
+
+
+@app.before_first_request
+def initialize():
+    create_db()
+    populate_db()
+    print("Partimos")
+    scheduler_manager = SchedulerManager(Perfil.query.all())
+    scheduler_manager.scheduler.start()
 
 
 if __name__ == "__main__":
