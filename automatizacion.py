@@ -16,15 +16,15 @@ class SchedulerManager():
 
     def add_job(self, perfil):
 
-        if perfil.periodicidad == Periodicidad.diaria:
+        if perfil.periodicidad == Periodicidad.diaria.value:
             self.scheduler.add_job(send_mail, 'interval', id=perfil.user_id, replace_existing=True, days=1,
                                    start_date=today_date())
 
-        elif perfil.periodicidad == Periodicidad.semanal:
+        elif perfil.periodicidad == Periodicidad.semanal.value:
             self.scheduler.add_job(send_mail, 'interval', id=perfil.user_id, replace_existing=True, weeks=1,
                                    start_date=today_date())
 
-        elif perfil.periodicidad == Periodicidad.mensual:
+        elif perfil.periodicidad == Periodicidad.mensual.value:
             self.scheduler.add_job(send_monthly_mail, 'interval', id=perfil.user_id, replace_existing=True, days=1,
                                    start_date=today_date())
 
@@ -33,11 +33,7 @@ class SchedulerManager():
 
 
 def today_date():
-    date = datetime.now()
-    date.hour = 0
-    date.minute = 0
-    date.second = 0
-    return date
+    return datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def send_mail():
