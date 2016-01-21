@@ -36,6 +36,8 @@ def today_date():
     return datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 
+
+# todo recolectar datos y enviar por correo
 def send_mail():
     print("mail nuevo ")
 
