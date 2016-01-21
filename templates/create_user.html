@@ -34,7 +34,16 @@
     </div>
     <div>
         Password
-        {{form.password(required="")}}
+        {{form.password(required="", type="password")}}
+    </div>
+    <div>
+        {% for error in form.confirm_password.errors%}
+        {{error}}
+        {% endfor %}
+    </div>
+    <div>
+        Confirmar password
+        {{form.confirm_password(required="", type="password")}}
     </div>
     <input type="submit" value="Enviar">
 </form>

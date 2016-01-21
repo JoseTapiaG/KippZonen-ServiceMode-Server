@@ -27,17 +27,14 @@ def create_user():
     form = CreateUserForm(request.form)
     if request.method == "POST":
         if form.validate():
-            if not form.user_exist():
-                try:
-                    user = User(email=form.email.data, user=form.user.data, password=form.password.data)
-                    db.session.add(user)
-                    db.session.commit()
-                    return flask.redirect("login")
-                except Exception:
-                    db.session.rollback()
-            else:
-                error = "Usuario ya existe"
-                return render_template("create_user.html", form=form, error=error)
+            try:
+                user = User(email=form.email.data, user=form.user.data, password=form.password.data)
+                db.session.add(user)
+                db.session.commit()
+                return flask.redirect("login")
+            except Exception:
+                db.session.rollback()
+                return render_template("create_user.html", form=form, error="Hubo un error en DB")
     return render_template("create_user.html", form=form)
 
 
@@ -144,22 +141,19 @@ def profile():
 
     if request.method == "POST":
         form = ProfileForm(request.form)
+        form.id = user.id
         if form.validate():
             try:
                 user.user = form.user.data
                 user.email = form.email.data
                 if form.password.data:
                     user.set_password(form.password.data)
-                    next = "login"
-                else:
-                    next = "filter"
                 user.perfil.periodicidad = form.periodicity.data
                 db.session.add(user)
                 db.session.commit()
                 app.scheduler_manager.add_job(user.perfil)
-                if form.password.data:
-                    logout()
-                return flask.redirect(next)
+                logout()
+                return flask.redirect("login")
             except Exception as e:
                 db.session.rollback()
                 error = update_error
