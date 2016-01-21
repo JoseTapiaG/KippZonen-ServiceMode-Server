@@ -4,45 +4,52 @@
     <meta charset="UTF-8">
     <title>Registros</title>
     <link href="{{ url_for('static', filename='bootstrap-3.3.6-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
     <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.2.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.twbsPagination.min.js') }}"></script>
     <script>
     $(function() {
         $('#pagination').twbsPagination({
             totalPages: {{total_pages}},
-            visiblePages: 7,
+            visiblePages: 10,
             href: '?page={{"{{number}}"}}&dateIni={{date_ini}}&dateEnd={{date_end}}'
         });
     });
+
     </script>
 </head>
 <body>
 
+<div class="container">
 
-<form action="csv">
-    <input name="dateIni" type="hidden" value="{{date_ini}}">
-    <input name="dateEnd" type="hidden" value="{{date_end}}">
-    <input type="submit" value="Exportar CSV">
-</form>
-<table>
+    <form action="csv">
+        <input name="dateIni" type="hidden" value="{{date_ini}}">
+        <input name="dateEnd" type="hidden" value="{{date_end}}">
+        <div class="form-group">
+            <input type="submit" value="Exportar CSV" class="btn btn-primary">
+        </div>
+    </form>
+    <table class="table table-bordered">
 
-    <tr>
-        <th>Fecha</th>
-        <th>Dato1</th>
-        <th>Dato2</th>
-        <th>Dato3</th>
-    </tr>
-    {% for registro in registros%}
-    <tr>
-        <td>{{registro.fecha}}</td>
-        <td>{{registro.dato1}}</td>
-        <td>{{registro.dato2}}</td>
-        <td>{{registro.dato3}}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<ul id="pagination" class="pagination-sm"></ul>
+        <tr>
+            <th>Fecha</th>
+            <th>Dato1</th>
+            <th>Dato2</th>
+            <th>Dato3</th>
+        </tr>
+        {% for registro in registros%}
+        <tr>
+            <td>{{registro.fecha}}</td>
+            <td>{{registro.dato1}}</td>
+            <td>{{registro.dato2}}</td>
+            <td>{{registro.dato3}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+        <ul id="pagination" class="pagination-sm"></ul>
+    </div>
+</div>
 
 
 </body>

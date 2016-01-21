@@ -3,51 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Create User</title>
+    <link href="{{ url_for('static', filename='bootstrap-3.3.6-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
+
 </head>
 <body>
-<form method="post">
-    <div>
-        {{error}}
-    </div>
-    <div>
-        {% for error in form.user.errors%}
-        {{error}}
-        {% endfor %}
-    </div>
-    <div>
-        Usuario:
-        {{form.user(required="")}}
-    </div>
-    <div>
-        {% for error in form.email.errors%}
-        {{error}}
-        {% endfor %}
-    </div>
-    <div>
-        E-mail
-        {{form.email(required="")}}
-    </div>
-    <div>
-        {% for error in form.password.errors%}
-        {{error}}
-        {% endfor %}
-    </div>
-    <div>
-        Password
-        {{form.password(required="", type="password")}}
-    </div>
-    <div>
-        {% for error in form.confirm_password.errors%}
-        {{error}}
-        {% endfor %}
-    </div>
-    <div>
-        Confirmar password
-        {{form.confirm_password(required="", type="password")}}
-    </div>
-    <input type="submit" value="Enviar">
-</form>
+<div class="container">
 
+
+    <form method="post" style="width:500px; margin:auto;">
+        <h1 style="margin-bottom:40px;">Crear usuario</h1>
+
+        <div>
+            {{error}}
+        </div>
+        <div>
+            {% for error in form.user.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="usuario">Usuario</label>
+            {{form.user(required="", id="usuario", class="form-control")}}
+        </div>
+        <div>
+            {% for error in form.email.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="mail">E-mail</label>
+            {{form.email(required="", id=mail, class="form-control")}}
+        </div>
+        <div>
+            {% for error in form.password.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            {{form.password(required="", id="password", type="password", class="form-control")}}
+        </div>
+        <div>
+            {% for error in form.confirm_password.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirmar password</label>
+            {{form.confirm_password(required="", id="confirm_password", type="password", class="form-control")}}
+        </div>
+        <input type="submit" value="Enviar" class="btn btn-default">
+    </form>
+</div>
 
 </body>
 </html>

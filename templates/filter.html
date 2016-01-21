@@ -2,17 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link href="{{ url_for('static', filename='bootstrap-3.3.6-dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <title>Filter</title>
 </head>
 <body>
 
-<form action="getRegistersForDate">
-    <input name="dateIni" type="date" required>
-    <input name="dateEnd" type="date" required>
-    <input name="page" type="hidden" value="1">
-    <input type="submit">
-</form>
 <a href="logout">Logout</a>
-
+<div class="container" style="text-align: center; margin-top:50px;">
+    <form action="getRegistersForDate">
+        <label for="dateIni">Fecha de inicio</label>
+        <div class="form-group">
+            <input id="dateIni" name="dateIni" type="date" required>
+        </div>
+        <label for="dateEnd">Fecha de termino</label>
+        <div class="form-group">
+            <input id="dateEnd" name="dateEnd" type="date" required>
+        </div>
+        <input name="page" type="hidden" value="1">
+        <input type="submit" class="btn btn-primary" value="Filtrar">
+    </form>
+</div>
 </body>
 </html>
