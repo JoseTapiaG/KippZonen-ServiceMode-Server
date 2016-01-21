@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link href="{{ url_for('static', filename='bootstrap-3.3.6-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <form method="post">
+        <div>
+            {% for error in form.user.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div>Usuario:</div>
+        <div>
+            {{form.user}}
+        </div>
+        <div>
+            {% for error in form.email.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div>
+            Email:
+        </div>
+        <div>
+            {{form.email}}
+        </div>
+        <div>
+            {% for error in form.password.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div>Password</div>
+        <div>
+            {{form.password(type="password")}}
+        </div>
+        <div>
+            {% for error in form.confirm_password.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div>Confirmar Password:</div>
+        <div>
+            {{form.confirm_password(type="password")}}
+        </div>
+        <div>
+            {% for error in form.periodicity.errors%}
+            {{error}}
+            {% endfor %}
+        </div>
+        <div>Periodicidad de envio de mail:</div>
+        <div>
+            {{form.periodicity}}
+        </div>
+
+        <input type="submit" value="Enviar">
+    </form>
+</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
-from wtforms import Form, StringField, validators
+from wtforms import Form, StringField, validators, SelectField
 
+from enums import Periodicidad
 from models import User
 import messages
 
@@ -25,6 +26,24 @@ class CreateUserForm(Form):
     user = StringField(u'user', validators=[validators.input_required(messages.required)])
     email = StringField(u'email', validators=[validators.input_required(messages.required)])
     password = StringField(u'password', validators=[validators.input_required(messages.required)])
+    confirm_password = StringField(u'confirm_password', validators=[validators.input_required(messages.required)])
 
     def user_exist(self):
         return User.query.get(self.email.data) is not None
+
+
+class ProfileForm(Form):
+    user = StringField(u'user', validators=[validators.input_required(messages.required)])
+    email = StringField(u'email', validators=[validators.input_required(messages.required)])
+    password = StringField(u'password', validators=[validators.equal_to('confirm_password',
+                                                                        message='Passwords deben ser iguales')])
+    confirm_password = StringField(u'confirm_password')
+    periodicity = SelectField(u'periodicity', choices=[
+        (Periodicidad.diaria.value, Periodicidad.diaria.value),
+        (Periodicidad.semanal.value, Periodicidad.semanal.value),
+        (Periodicidad.mensual.value, Periodicidad.mensual.value)])
+
+    def set_values(self, user):
+        self.user.data = user.user
+        self.email.data = user.email
+        self.periodicity.data = user.perfil.periodicidad

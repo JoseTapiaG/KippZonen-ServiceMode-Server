@@ -11,18 +11,21 @@ class SchedulerManager():
         for perfil in perfiles:
             self.add_job(perfil)
 
+    def start(self):
+        self.scheduler.start()
+
     def add_job(self, perfil):
 
         if perfil.periodicidad == Periodicidad.diaria:
-            self.scheduler.add_job(send_mail, 'interval', id=perfil.user_email, replace_existing=True, days=1,
+            self.scheduler.add_job(send_mail, 'interval', id=perfil.user_id, replace_existing=True, days=1,
                                    start_date=today_date())
 
         elif perfil.periodicidad == Periodicidad.semanal:
-            self.scheduler.add_job(send_mail, 'interval', id=perfil.user_email, replace_existing=True, weeks=1,
+            self.scheduler.add_job(send_mail, 'interval', id=perfil.user_id, replace_existing=True, weeks=1,
                                    start_date=today_date())
 
         elif perfil.periodicidad == Periodicidad.mensual:
-            self.scheduler.add_job(send_monthly_mail, 'interval', id=perfil.user_email, replace_existing=True, days=1,
+            self.scheduler.add_job(send_monthly_mail, 'interval', id=perfil.user_id, replace_existing=True, days=1,
                                    start_date=today_date())
 
     def stop_all(self):

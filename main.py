@@ -5,7 +5,8 @@ import flask
 from flask import Flask, request, render_template, make_response
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 
-from forms import LoginForm, validate_user, CreateUserForm
+from forms import LoginForm, validate_user, CreateUserForm, ProfileForm
+from messages import update_error
 from models import db, Registro, User, Perfil
 
 from automatizacion import SchedulerManager
@@ -17,8 +18,8 @@ login_manager.login_view = 'login'
 
 
 @login_manager.user_loader
-def load_user(email):
-    return User.query.get(email)
+def load_user(id):
+    return User.query.get(id)
 
 
 @app.route('/create_user', methods=['GET', 'POST'])
@@ -57,6 +58,12 @@ def login():
 
 @app.route("/logout", methods=["GET"])
 @login_required
+def logout_page():
+    """Logout the current user."""
+    logout()
+    return render_template("logout.html")
+
+
 def logout():
     """Logout the current user."""
     user = current_user
@@ -64,19 +71,12 @@ def logout():
     db.session.add(user)
     db.session.commit()
     logout_user()
-    return render_template("logout.html")
 
 
 @app.route("/index")
 @login_required
 def index():
     return render_template('index.html', login_form=LoginForm())
-
-
-@app.route("/getPerfil")
-def getPerfil():
-    perfil = Perfil.query.get(1)
-    return perfil
 
 
 @app.route("/getAll")
@@ -133,6 +133,40 @@ def save():
     return "Ok"
 
 
+@app.route("/profile", methods=['GET', 'POST'])
+@login_required
+def profile():
+    user = current_user
+
+    if request.method == "GET":
+        form = ProfileForm()
+        form.set_values(user)
+
+    if request.method == "POST":
+        form = ProfileForm(request.form)
+        if form.validate():
+            try:
+                user.user = form.user.data
+                user.email = form.email.data
+                if form.password.data:
+                    user.set_password(form.password.data)
+                    next = "login"
+                else:
+                    next = "filter"
+                user.perfil.periodicidad = form.periodicity.data
+                db.session.add(user)
+                db.session.commit()
+                app.scheduler_manager.add_job(user.perfil)
+                if form.password.data:
+                    logout()
+                return flask.redirect(next)
+            except Exception as e:
+                db.session.rollback()
+                error = update_error
+                return render_template("profile.html", form=form, error=error)
+    return render_template('profile.html', form=form)
+
+
 def create_db():
     try:
         db.create_all()
@@ -159,8 +193,8 @@ def initialize():
     create_db()
     populate_db()
     print("Partimos")
-    scheduler_manager = SchedulerManager(Perfil.query.all())
-    scheduler_manager.scheduler.start()
+    app.scheduler_manager = SchedulerManager(Perfil.query.all())
+    app.scheduler_manager.start()
 
 
 if __name__ == "__main__":
