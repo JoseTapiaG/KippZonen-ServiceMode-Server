@@ -8,7 +8,11 @@
 
 </head>
 <body>
-<div class="container">
+
+{% set active = 'profile' %}
+{% include 'menu.html' %}
+
+<div class="container content">
     <form method="post" style="width:500px; margin:auto;">
 
         <h1 style="margin-bottom:40px;">Perfil</h1>

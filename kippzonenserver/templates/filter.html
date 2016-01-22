@@ -6,8 +6,10 @@
     <title>Filter</title>
 </head>
 <body>
+{% set active = 'registers' %}
+{% include 'menu.html' %}
 
-<a href="logout">Logout</a>
+
 <div class="container" style="text-align: center; margin-top:50px;">
     <form action="getRegistersForDate">
         <label for="dateIni">Fecha de inicio</label>

@@ -58,7 +58,7 @@ def login():
 @login_required
 def logout_page():
     logout()
-    return render_template("logout.html")
+    return flask.redirect("login")
 
 
 def logout():

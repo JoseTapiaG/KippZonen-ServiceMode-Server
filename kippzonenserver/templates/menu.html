@@ -1,0 +1,14 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li {% if active == 'registers' %} class="active" {% endif %}><a href="filter">Registros</a></li>
+                <li {% if active == 'profile' %} class="active" {% endif %}><a href="profile">Perfil</a></li>
+                <li {% if active == 'create_user' %} class="active" {% endif %}><a href="create_user">Crear usuario</a></li>
+            </ul>
+            <div class="navbar-text navbar-right">
+                <a class="navbar-link" href="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>

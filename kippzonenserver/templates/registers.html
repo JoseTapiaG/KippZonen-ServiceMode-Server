@@ -19,8 +19,9 @@
     </script>
 </head>
 <body>
-
-<div class="container">
+{% set active = 'registers' %}
+{% include 'menu.html' %}
+<div class="container content">
 
     <form action="csv">
         <input name="dateIni" type="hidden" value="{{date_ini}}">
