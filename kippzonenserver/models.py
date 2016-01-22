@@ -1,9 +1,9 @@
-from enums import Periodicidad
-from flask import Flask
+from kippzonenserver.enums import Periodicidad
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__)
+from kippzonenserver import app
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db = SQLAlchemy(app)
 

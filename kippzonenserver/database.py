@@ -1,11 +1,9 @@
 import sqlite3
 
-from flask import Flask, g
+from flask import g
+from kippzonenserver import app
 
 DATABASE = 'test.db'
-
-
-app = Flask(__name__)
 
 
 def get_db():

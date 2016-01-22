@@ -1,8 +1,9 @@
-import messages
-import my_validators
-from enums import Periodicidad
-from models import User
 from wtforms import Form, StringField, validators, SelectField
+
+from kippzonenserver import messages
+from kippzonenserver.enums import Periodicidad
+from kippzonenserver.models import User
+from kippzonenserver import my_validators
 
 
 class LoginForm(Form):

@@ -1,4 +1,4 @@
-from models import User
+from kippzonenserver.models import User
 from wtforms import ValidationError
 
 
