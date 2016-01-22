@@ -1,8 +1,7 @@
+from enums import Periodicidad
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from enums import Periodicidad
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'

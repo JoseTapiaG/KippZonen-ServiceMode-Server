@@ -1,9 +1,8 @@
-from wtforms import Form, StringField, validators, SelectField
-
+import messages
 import my_validators
 from enums import Periodicidad
 from models import User
-import messages
+from wtforms import Form, StringField, validators, SelectField
 
 
 class LoginForm(Form):

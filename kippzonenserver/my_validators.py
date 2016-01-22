@@ -1,5 +1,5 @@
-from wtforms import ValidationError
 from models import User
+from wtforms import ValidationError
 
 
 def user_exists(new_user=True):

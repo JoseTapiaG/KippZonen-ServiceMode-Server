@@ -2,16 +2,15 @@ import math
 from datetime import datetime
 
 import flask
-from flask import Flask, request, render_template, make_response
+from kippzonenserver import app
+from kippzonenserver.automatizacion import SchedulerManager
+from flask import request, render_template, make_response
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+from kippzonenserver.forms import LoginForm, validate_user, CreateUserForm, ProfileForm
+from kippzonenserver.mail import send_csv
+from kippzonenserver.messages import update_error
+from kippzonenserver.models import db, Registro, User, Perfil
 
-from forms import LoginForm, validate_user, CreateUserForm, ProfileForm
-from messages import update_error
-from models import db, Registro, User, Perfil
-
-from automatizacion import SchedulerManager
-
-app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -23,12 +22,14 @@ def load_user(id):
 
 
 @app.route('/create_user', methods=['GET', 'POST'])
+@login_required
 def create_user():
     form = CreateUserForm(request.form)
     if request.method == "POST":
         if form.validate():
             try:
                 user = User(email=form.email.data, user=form.user.data, password=form.password.data)
+                user.perfil = Perfil()
                 db.session.add(user)
                 db.session.commit()
                 return flask.redirect("login")
@@ -161,6 +162,13 @@ def profile():
     return render_template('profile.html', form=form)
 
 
+@app.route("/test_mail", methods=['GET', 'POST'])
+def test_mail():
+    data = "1,2,3\n4,5,6"
+    send_csv(data)
+    return "Ok"
+
+
 def create_db():
     try:
         db.create_all()
@@ -191,6 +199,4 @@ def initialize():
     app.scheduler_manager.start()
 
 
-if __name__ == "__main__":
-    app.config["SECRET_KEY"] = "ITSASECRET"
-    app.run(port=5000, debug=True)
+
