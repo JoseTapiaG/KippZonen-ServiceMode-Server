@@ -2,12 +2,12 @@ import math
 from datetime import datetime
 
 import flask
-from kippzonenserver import app
-from kippzonenserver.automatizacion import SchedulerManager
 from flask import request, render_template, make_response
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
+
+from kippzonenserver import app
+from kippzonenserver.automatizacion import SchedulerManager
 from kippzonenserver.forms import LoginForm, validate_user, CreateUserForm, ProfileForm
-from kippzonenserver.mail import send_csv
 from kippzonenserver.messages import update_error
 from kippzonenserver.models import db, Registro, User, Perfil
 
@@ -57,13 +57,11 @@ def login():
 @app.route("/logout", methods=["GET"])
 @login_required
 def logout_page():
-    """Logout the current user."""
     logout()
     return render_template("logout.html")
 
 
 def logout():
-    """Logout the current user."""
     user = current_user
     user.authenticated = False
     db.session.add(user)
@@ -162,13 +160,6 @@ def profile():
     return render_template('profile.html', form=form)
 
 
-@app.route("/test_mail", methods=['GET', 'POST'])
-def test_mail():
-    data = "1,2,3\n4,5,6"
-    send_csv(data)
-    return "Ok"
-
-
 def create_db():
     try:
         db.create_all()
@@ -197,6 +188,3 @@ def initialize():
     print("Partimos")
     app.scheduler_manager = SchedulerManager(Perfil.query.all())
     app.scheduler_manager.start()
-
-
-
