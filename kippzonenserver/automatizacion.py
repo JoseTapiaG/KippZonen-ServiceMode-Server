@@ -19,19 +19,50 @@ class SchedulerManager():
     def add_job(self, perfil):
 
         if perfil.periodicidad == Periodicidad.diaria.value:
-            self.scheduler.add_job(send_daily, 'interval', id=perfil.user_id, replace_existing=True, days=1,
+            self.scheduler.add_job(send_mail(Periodicidad.diaria, perfil.user.email), 'interval', id=perfil.user_id, replace_existing=True, days=1,
                                    start_date=today_init_time())
 
         elif perfil.periodicidad == Periodicidad.semanal.value:
-            self.scheduler.add_job(send_weekly, 'interval', id=perfil.user_id, replace_existing=True, weeks=1,
+            self.scheduler.add_job(send_mail(Periodicidad.semanal, perfil.user.email), 'interval', id=perfil.user_id, replace_existing=True, weeks=1,
                                    start_date=today_init_time())
 
         elif perfil.periodicidad == Periodicidad.mensual.value:
-            self.scheduler.add_job(send_monthly, 'interval', id=perfil.user_id, replace_existing=True, days=1,
+            self.scheduler.add_job(send_mail(Periodicidad.mensual, perfil.user.email), 'interval', id=perfil.user_id, replace_existing=True, days=1,
                                    start_date=today_init_time())
 
     def stop_all(self):
         self.scheduler.shutdown()
+
+
+def send_mail(periodicity, mail):
+    def send_daily():
+        date_ini = format_date(today_init_time() + timedelta(days=-1))
+        date_end = format_date(today_end_time() + timedelta(days=-1))
+        data = get_data(date_ini, date_end)
+        title = title_mail.format(date_ini, date_end)
+        send_csv(title, data, mail)
+
+    def send_weekly():
+        date_ini = format_date(today_init_time() + timedelta(weeks=-1))
+        date_end = format_date(today_end_time() + timedelta(days=-1))
+        data = get_data(date_ini, date_end)
+        title = title_mail.format(date_ini, date_end)
+        send_csv(title, data, mail)
+
+    def send_monthly():
+        if datetime.now().day == 1:
+            date_ini = format_date(first_day_of_month(today_init_time() + timedelta(days=-1)))
+            date_end = format_date(today_end_time() + timedelta(days=-1))
+            data = get_data(date_ini, date_end)
+            title = title_mail.format(date_ini, date_end)
+            send_csv(title, data, mail)
+
+    if periodicity == Periodicidad.diaria:
+        return send_daily
+    elif periodicity == Periodicidad.semanal:
+        return send_weekly
+    elif periodicity == Periodicidad.mensual:
+        return send_monthly
 
 
 def today_init_time():
@@ -57,28 +88,3 @@ def format_date(date):
 
 def first_day_of_month(date):
     return date.replace(day=1)
-
-
-def send_daily():
-    date_ini = format_date(today_init_time() + timedelta(days=-1))
-    date_end = format_date(today_end_time() + timedelta(days=-1))
-    data = get_data(date_ini, date_end)
-    title = title_mail.format(date_ini, date_end)
-    send_csv(title, data)
-
-
-def send_weekly():
-    date_ini = format_date(today_init_time() + timedelta(weeks=-1))
-    date_end = format_date(today_end_time() + timedelta(days=-1))
-    data = get_data(date_ini, date_end)
-    title = title_mail.format(date_ini, date_end)
-    send_csv(title, data)
-
-
-def send_monthly():
-    if datetime.now().day == 1:
-        date_ini = format_date(first_day_of_month(today_init_time() + timedelta(days=-1)))
-        date_end = format_date(today_end_time() + timedelta(days=-1))
-        data = get_data(date_ini, date_end)
-        title = title_mail.format(date_ini, date_end)
-        send_csv(title, data)

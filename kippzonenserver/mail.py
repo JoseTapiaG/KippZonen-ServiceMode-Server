@@ -9,15 +9,15 @@ app.config.update(dict(
         MAIL_PORT=587,
         MAIL_USE_TLS=True,
         MAIL_USE_SSL=False,
-        MAIL_USERNAME='jose@niclabs.cl',
+        MAIL_USERNAME='adkmovil@niclabs.cl',
         MAIL_PASSWORD='xxxxxxx',
 ))
 mail.init_app(app)
 
 
-def send_csv(title, data):
+def send_csv(title, data, receiver):
     msg = Message(title,
-                  sender="jose@niclabs.cl",
-                  recipients=["jose@niclabs.cl"])
+                  sender="adkmovil@niclabs.cl",
+                  recipients=[receiver])
     msg.attach("test.csv", "text/csv", data)
     mail.send(message=msg)
