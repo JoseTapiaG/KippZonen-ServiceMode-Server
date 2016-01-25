@@ -124,9 +124,10 @@ def save():
         )
         db.session.add(registro)
         db.session.commit()
+        return "OK"
     except Exception:
         db.session.rollback()
-    return "Ok"
+        return "Error"
 
 
 @app.route("/profile", methods=['GET', 'POST'])
