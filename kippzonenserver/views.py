@@ -124,9 +124,10 @@ def save():
         )
         db.session.add(registro)
         db.session.commit()
+        return "OK"
     except Exception:
         db.session.rollback()
-    return "Ok"
+        return "Error"
 
 
 @app.route("/profile", methods=['GET', 'POST'])
@@ -163,9 +164,10 @@ def profile():
 def create_db():
     try:
         db.create_all()
+        return "OK"
     except Exception as e:
         db.session.rollback()
-    return "ok"
+        return "Error"
 
 
 def populate_db():
@@ -176,15 +178,17 @@ def populate_db():
         db.session.add(registro)
         db.session.add(user)
         db.session.commit()
+        return "OK"
     except Exception as e:
         db.session.rollback()
-    return "Ok"
+        return "Error"
 
 
 @app.before_first_request
 def initialize():
+    print("Inicializada la construcción de la BD")
     create_db()
     populate_db()
-    print("Partimos")
     app.scheduler_manager = SchedulerManager(Perfil.query.all())
     app.scheduler_manager.start()
+    print("Finalizada la construcción de la BD")
