@@ -8,7 +8,6 @@
 
 </head>
 <body>
-
 {% set active = 'create_user' %}
 {% include 'menu.html' %}
 
@@ -21,39 +20,23 @@
         <div>
             {{error}}
         </div>
-        <div>
-            {% for error in form.user.errors%}
-            {{error}}
-            {% endfor %}
-        </div>
         <div class="form-group">
+            {{ print_errors(form.user.errors) }}
             <label for="usuario">Usuario</label>
             {{form.user(required="", id="usuario", class="form-control")}}
         </div>
-        <div>
-            {% for error in form.email.errors%}
-            {{error}}
-            {% endfor %}
-        </div>
         <div class="form-group">
+            {{ print_errors(form.email.errors) }}
             <label for="mail">E-mail</label>
-            {{form.email(required="", id=mail, class="form-control")}}
-        </div>
-        <div>
-            {% for error in form.password.errors%}
-            {{error}}
-            {% endfor %}
+            {{form.email(required="", id="mail", class="form-control")}}
         </div>
         <div class="form-group">
+            {{ print_errors(form.password.errors) }}
             <label for="password">Password</label>
             {{form.password(required="", id="password", type="password", class="form-control")}}
         </div>
-        <div>
-            {% for error in form.confirm_password.errors%}
-            {{error}}
-            {% endfor %}
-        </div>
         <div class="form-group">
+            {{ print_errors(form.confirm_password.errors) }}
             <label for="confirm_password">Confirmar password</label>
             {{form.confirm_password(required="", id="confirm_password", type="password", class="form-control")}}
         </div>

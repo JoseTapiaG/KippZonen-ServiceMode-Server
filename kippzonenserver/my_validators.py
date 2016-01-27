@@ -40,7 +40,7 @@ def mail_exists(new_user=True):
         user_by_id = User.query.get(form.id)
         user_by_mail = User.query.filter_by(email=field.data).first()
 
-        if user_by_mail:
+        if not user_by_mail:
             return
 
         if user_by_id != user_by_mail:
