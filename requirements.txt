@@ -1,0 +1,6 @@
+Flask
+flask-login
+apscheduler
+flask_mail
+flask_sqlalchemy
+wtforms
